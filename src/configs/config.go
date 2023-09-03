@@ -18,7 +18,7 @@ func InitDatabase() {
 	dbPort := os.Getenv("DB_PORT")
 
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
+		"host=%s user=%s password=%s dbname=%s port=%s TimeZone=Asia/Jakarta",
 		dbHost, dbUser, dbPass, dbName, dbPort,
 	)
 
