@@ -2,7 +2,6 @@ package configs
 
 import (
 	"fmt"
-	"ijash-marketplace/src/models"
 	"os"
 
 	"gorm.io/driver/postgres"
@@ -19,19 +18,14 @@ func InitDatabase() {
 	dbPort := os.Getenv("DB_PORT")
 
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
+		"host=%s user=%s password=%s dbname=%s port=%s TimeZone=Asia/Jakarta",
 		dbHost, dbUser, dbPass, dbName, dbPort,
 	)
-	fmt.Println(dsn)
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Database connection failed")
 	}
-	migration()
-}
-
-func migration() {
-	DB.AutoMigrate(&models.News{})
+	Migration()
 }

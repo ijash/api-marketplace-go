@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"ijash-marketplace/src/configs"
-	"ijash-marketplace/src/routes"
+	"ijash-jwt-auth/src/configs"
+	"ijash-jwt-auth/src/routes"
 	"log"
 	"os"
 
