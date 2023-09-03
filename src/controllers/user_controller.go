@@ -3,6 +3,7 @@ package controllers
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"ijash-jwt-auth/src/configs"
 	"ijash-jwt-auth/src/helpers"
 	"ijash-jwt-auth/src/middleware"
@@ -137,24 +138,30 @@ func generateSHA256Hash(input string) (string, error) {
 }
 
 func GetUserProfileController(c echo.Context) error {
+
 	log.Println("GetUserProfileController accessed")
 	// Extract the JWT token from the authorization header
-	tokenString := c.Request().Header.Get("Authorization")
+	rawToken := c.Request().Header.Get("Authorization")
 
+	tokenString, jwtErr := utils.ExtractJWTFromBearerToken(rawToken)
+	if jwtErr == true {
+		return c.JSON(http.StatusUnauthorized, helpers.Unauthorized("Invalid token"))
+	}
 	// Extract and validate the user ID from the JWT token
-	userID, err := utils.ExtractJWTFromBearerToken(tokenString)
-	if err == true {
+	userID, err := middleware.ExtractUserIDFromJWT(tokenString)
+	fmt.Println(userID)
+	if err != nil {
 		return c.JSON(http.StatusUnauthorized, helpers.Unauthorized("Invalid token"))
 	}
 
 	// Query the database to retrieve user data based on the userID
 	var user models.User
-	result := configs.DB.First(&user, userID)
+	result := configs.DB.First(&user, "id = ?", userID)
 	if result.Error != nil {
 		// Handle database query error (user not found or other issues)
-		return c.JSON(http.StatusNotFound, helpers.BaseResponseOk(nil, "User not found"))
+		return c.JSON(http.StatusInternalServerError, helpers.InternalServerError("User not found"))
 	}
-
+	user.Password = "[hidden]"
 	// Return the user data as a response
 	return c.JSON(http.StatusOK, helpers.BaseResponseOk(user))
 }

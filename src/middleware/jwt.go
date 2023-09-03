@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -31,4 +32,30 @@ func GenerateJwt(name string, id string) (string, error) {
 		return "", err
 	}
 	return t, nil
+}
+
+func ExtractUserIDFromJWT(tokenString string) (string, error) {
+	// Parse the token
+	token, err := jwt.ParseWithClaims(tokenString, &jwtCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("PRIVATE_KEY_JWT")), nil
+	})
+
+	if err != nil {
+		log.Printf("Error parsing JWT: %v", err)
+		return "", err
+	}
+
+	if !token.Valid {
+		log.Printf("Invalid JWT token")
+		return "", fmt.Errorf("invalid token")
+	}
+
+	// Type-assert to access custom claims
+	claims, ok := token.Claims.(*jwtCustomClaims)
+	if !ok {
+		log.Printf("Invalid custom claims in JWT")
+		return "", fmt.Errorf("invalid claims")
+	}
+
+	return claims.Id, nil
 }
