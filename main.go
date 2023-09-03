@@ -17,7 +17,8 @@ func main() {
 	e := echo.New()
 	routes.InitRoute(e)
 	// e.Start(":8000")
-	e.Start(os.Getenv("PORT"))
+	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
+	e.Start(port)
 
 }
 
