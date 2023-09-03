@@ -12,12 +12,12 @@ import (
 )
 
 func main() {
-	// LoadEnv()
+	LoadEnv()
 	configs.InitDatabase()
 	e := echo.New()
 	routes.InitRoute(e)
-	e.Start(":8000")
-	// e.Start(os.Getenv("PORT"))
+	// e.Start(":8000")
+	e.Start(os.Getenv("PORT"))
 
 }
 
