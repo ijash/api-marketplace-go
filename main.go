@@ -13,6 +13,7 @@ func main() {
 	configs.InitDatabase()
 	e := echo.New()
 	routes.InitRoute(e)
+
 	e.Start(os.Getenv("PORT"))
 
 }
