@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"ijash-jwt-auth/src/configs"
 	"ijash-jwt-auth/src/routes"
 	"os"
@@ -9,7 +10,7 @@ import (
 )
 
 func main() {
-
+	fmt.Println(os.Getenv("ENV"))
 	configs.InitDatabase()
 	e := echo.New()
 	routes.InitRoute(e)
