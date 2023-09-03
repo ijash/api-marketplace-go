@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"ijash-jwt-auth/src/configs"
 	"ijash-jwt-auth/src/routes"
 	"os"
@@ -14,7 +15,8 @@ func main() {
 	e := echo.New()
 	routes.InitRoute(e)
 	// e.Start(":8000")
-	e.Start(os.Getenv("PORT"))
+	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
+	e.Start(port)
 
 }
 
